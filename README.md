@@ -1,6 +1,14 @@
+<p align="center"><img src="docs/icon.png" width="112" alt="Makera logo"></p>
+
 # MakerHA — Makera Carvera for Home Assistant
 
 *Makera yourself at home.*
+
+> [!IMPORTANT]
+> **Unofficial community project.** This integration is developed by the community and is **not affiliated with,
+> endorsed by, or supported by Makera Inc.** in any way. *Makera* and *Carvera* are trademarks of Makera Inc.; the
+> name and logo are used solely to identify the machines this integration works with. Don't contact Makera for
+> support with this integration — open an issue here instead.
 
 [![HACS Custom](https://img.shields.io/badge/HACS-custom-41BDF5.svg)](https://github.com/hacs/integration)
 [![Validate](https://github.com/BellionBastien/MakerHA/actions/workflows/validate.yml/badge.svg)](https://github.com/BellionBastien/MakerHA/actions/workflows/validate.yml)
