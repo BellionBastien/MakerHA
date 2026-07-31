@@ -2,8 +2,21 @@
 
 *Makera yourself at home.*
 
+[![HACS Custom](https://img.shields.io/badge/HACS-custom-41BDF5.svg)](https://github.com/hacs/integration)
+[![Validate](https://github.com/BellionBastien/MakerHA/actions/workflows/validate.yml/badge.svg)](https://github.com/BellionBastien/MakerHA/actions/workflows/validate.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+![HA 2025.6+](https://img.shields.io/badge/Home%20Assistant-2025.6%2B-blue)
+
 Local, no-cloud Home Assistant integration for [Makera Carvera](https://www.makera.com) CNC machines running the
 [Community Firmware](https://github.com/Carvera-Community/Carvera_Community_Firmware) with the read-only HTTP status API.
+
+Know when your machine is waiting for a tool change, get pinged when the job finishes or alarms, chart your spindle
+temperature, and switch the dust extraction with the machine — all local, nothing leaves your network.
+
+<!-- TODO: add docs/device-page.png (screenshot of the HA device page) — a picture sells this better than any text -->
+
+> **Status: early (v0.1.x).** Running against a Carvera Air on the `http-status-api` firmware branch. Feedback and
+> issue reports are very welcome — this is being shared to find out what other people need.
 
 - **Auto-discovery** — machines are found via the Carvera's own UDP announcement; no IP typing, and the integration
   follows the machine across DHCP lease changes automatically.
@@ -32,8 +45,11 @@ Local, no-cloud Home Assistant integration for [Makera Carvera](https://www.make
 
 ### HACS (recommended)
 
-1. HACS → three-dot menu → **Custom repositories** → add `https://github.com/BellionBastien/MakerHA` as type *Integration*.
-2. Search for **MakerHA**, download, restart Home Assistant.
+[![Open your Home Assistant instance and add this repository to HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=BellionBastien&repository=MakerHA&category=integration)
+
+1. Click the badge above (or: HACS → three-dot menu → **Custom repositories** → add
+   `https://github.com/BellionBastien/MakerHA` as type *Integration*).
+2. Download **MakerHA**, restart Home Assistant.
 3. Settings → Devices & Services → **Add integration** → *Makera Carvera (MakerHA)*. Machines that are powered on
    appear in a pick list; select one and you're done.
 
@@ -105,6 +121,25 @@ listens passively: while no announcement is heard, it doesn't even attempt HTTP,
 When you flip the machine on, the announcement arrives within a second, the integration re-learns the machine's
 current IP from it, and polling resumes. Everything except the **Online** sensor shows *unavailable* while the machine
 is off — that's the correct, expected representation.
+
+## Troubleshooting
+
+**Nothing shows up in the discovery list.**
+The machine is probably powered off (turn it on and retry), or UDP broadcasts on port 3333 don't reach your Home
+Assistant (typical for Docker installs without host networking). Use *Enter address manually* — everything works
+without discovery, you just lose the automatic IP-follow and the fast off-detection.
+
+**"Could not reach the status API" during setup.**
+The firmware feature is off. On the machine console (Carvera Controller or USB): `config-set sd wifi.http_enable true`
+then `reset`. Verify with `curl http://<machine-ip>:8080/status` from any computer.
+
+**All entities are unavailable.**
+The machine is powered off — that's the intended representation. The **Online** binary sensor stays available and
+tells you on/off; automate on that.
+
+**Sensors freeze during file transfers.**
+Expected: the firmware suspends its network stack while receiving a file (XMODEM). Everything recovers when the
+transfer ends.
 
 ## Credits
 
