@@ -30,39 +30,39 @@ class CarveraBinarySensorDescription(BinarySensorEntityDescription):
 BINARY_SENSORS: tuple[CarveraBinarySensorDescription, ...] = (
     CarveraBinarySensorDescription(
         key="running",
-        name="Running",
+        translation_key="running",
         device_class=BinarySensorDeviceClass.RUNNING,
         value_fn=lambda d: d.get("state") in ("Run", "Home"),
     ),
     CarveraBinarySensorDescription(
         key="alarm",
-        name="Alarm",
+        translation_key="alarm",
         device_class=BinarySensorDeviceClass.PROBLEM,
         value_fn=lambda d: d.get("alarm"),
     ),
     CarveraBinarySensorDescription(
         key="job_playing",
-        name="Job playing",
+        translation_key="job_playing",
         icon="mdi:play-circle-outline",
         value_fn=lambda d: (d.get("job") or {}).get("playing"),
     ),
     CarveraBinarySensorDescription(
         key="controller_connected",
-        name="Controller connected",
+        translation_key="controller_connected",
         device_class=BinarySensorDeviceClass.CONNECTIVITY,
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda d: d.get("controller_connected"),
     ),
     CarveraBinarySensorDescription(
         key="laser_mode",
-        name="Laser mode",
+        translation_key="laser_mode",
         icon="mdi:laser-pointer",
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda d: (d.get("laser") or {}).get("mode"),
     ),
     CarveraBinarySensorDescription(
         key="vacuum_mode",
-        name="Vacuum mode",
+        translation_key="vacuum_mode",
         icon="mdi:fan-auto",
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda d: (d.get("spindle") or {}).get("vacuum"),
@@ -111,7 +111,7 @@ class CarveraOnlineSensor(CarveraEntity, BinarySensorEntity):
     react to the machine being powered on or off.
     """
 
-    _attr_name = "Online"
+    _attr_translation_key = "online"
     _attr_device_class = BinarySensorDeviceClass.POWER
 
     def __init__(self, coordinator: CarveraCoordinator) -> None:

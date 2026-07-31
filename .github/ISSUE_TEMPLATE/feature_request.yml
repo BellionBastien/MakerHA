@@ -1,0 +1,25 @@
+name: Feature request
+description: Suggest an idea or a use case
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: use-case
+    attributes:
+      label: What do you want to achieve?
+      description: Describe the use case rather than the implementation — "I want to be notified when X" beats "add a sensor for Y".
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: How could it work?
+      description: Optional — your idea of how this could look (entity, trigger, service, dashboard...)
+  - type: dropdown
+    id: firmware-side
+    attributes:
+      label: Does this need new data from the machine?
+      description: Some requests need the firmware's status API to expose more fields first — that happens in the Community Firmware repo.
+      options:
+        - "No idea"
+        - "No - the data is already in /status"
+        - "Yes - the firmware would need to expose more"

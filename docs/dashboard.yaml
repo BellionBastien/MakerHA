@@ -1,0 +1,58 @@
+# Copy-paste dashboard for a Carvera machine.
+#
+# Uses only built-in cards. Replace the entity ids with yours: they are
+# derived from your machine name, e.g. CARVERA_AIR_05214 ->
+# sensor.carvera_air_05214_state. Add a new manual card, switch to the
+# YAML editor, and paste.
+
+type: vertical-stack
+cards:
+  - type: entities
+    title: Carvera
+    entities:
+      - entity: sensor.carvera_air_05214_state
+        name: State
+      - entity: binary_sensor.carvera_air_05214_online
+        name: Powered on
+      - entity: sensor.carvera_air_05214_tool
+        name: Tool
+      - entity: sensor.carvera_air_05214_job_file
+        name: Job file
+      - entity: sensor.carvera_air_05214_job_elapsed
+        name: Elapsed
+
+  - type: gauge
+    entity: sensor.carvera_air_05214_job_progress
+    name: Job progress
+    min: 0
+    max: 100
+    unit: "%"
+
+  - type: horizontal-stack
+    cards:
+      - type: gauge
+        entity: sensor.carvera_air_05214_spindle_temperature
+        name: Spindle
+        min: 10
+        max: 70
+        severity:
+          green: 10
+          yellow: 45
+          red: 60
+      - type: gauge
+        entity: sensor.carvera_air_05214_power_temperature
+        name: Power supply
+        min: 10
+        max: 70
+        severity:
+          green: 10
+          yellow: 45
+          red: 60
+
+  - type: history-graph
+    title: Last hour
+    hours_to_show: 1
+    entities:
+      - entity: sensor.carvera_air_05214_spindle_speed
+      - entity: sensor.carvera_air_05214_spindle_temperature
+      - entity: sensor.carvera_air_05214_power_temperature

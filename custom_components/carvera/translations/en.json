@@ -40,5 +40,80 @@
       "job_finished": "Job finished",
       "alarm": "Alarm raised"
     }
+  },
+  "entity": {
+    "sensor": {
+      "state": {
+        "name": "State"
+      },
+      "spindle_speed": {
+        "name": "Spindle speed"
+      },
+      "spindle_temperature": {
+        "name": "Spindle temperature"
+      },
+      "power_temperature": {
+        "name": "Power supply temperature"
+      },
+      "feed_rate": {
+        "name": "Feed rate"
+      },
+      "feed_override": {
+        "name": "Feed override"
+      },
+      "spindle_override": {
+        "name": "Spindle override"
+      },
+      "tool": {
+        "name": "Tool"
+      },
+      "target_tool": {
+        "name": "Target tool"
+      },
+      "tool_offset": {
+        "name": "Tool offset"
+      },
+      "job_progress": {
+        "name": "Job progress"
+      },
+      "job_file": {
+        "name": "Job file"
+      },
+      "job_elapsed": {
+        "name": "Job elapsed"
+      },
+      "probe_voltage": {
+        "name": "Wireless probe battery"
+      },
+      "laser_power": {
+        "name": "Laser power"
+      },
+      "halt_reason": {
+        "name": "Halt reason"
+      }
+    },
+    "binary_sensor": {
+      "running": {
+        "name": "Running"
+      },
+      "alarm": {
+        "name": "Alarm"
+      },
+      "job_playing": {
+        "name": "Job playing"
+      },
+      "controller_connected": {
+        "name": "Controller connected"
+      },
+      "laser_mode": {
+        "name": "Laser mode"
+      },
+      "vacuum_mode": {
+        "name": "Vacuum mode"
+      },
+      "online": {
+        "name": "Online"
+      }
+    }
   }
 }

@@ -43,6 +43,15 @@ def _tool(value: Any) -> Any:
     return None if value is None or value < 0 else value
 
 
+def _length_unit(data: dict[str, Any]) -> str:
+    """The firmware reports converted values while in inch mode (G20)."""
+    return "in" if data.get("inch") else "mm"
+
+
+def _feed_unit(data: dict[str, Any]) -> str:
+    return "in/min" if data.get("inch") else "mm/min"
+
+
 @dataclass(frozen=True, kw_only=True)
 class CarveraSensorDescription(SensorEntityDescription):
     """Sensor description with a value extractor."""
@@ -50,12 +59,15 @@ class CarveraSensorDescription(SensorEntityDescription):
     value_fn: Callable[[dict[str, Any]], Any]
     exists_fn: Callable[[dict[str, Any]], bool] = lambda data: True
     attributes_fn: Callable[[dict[str, Any]], dict[str, Any]] | None = None
+    # dynamic unit (inch vs metric mode); when set it wins over
+    # native_unit_of_measurement
+    unit_fn: Callable[[dict[str, Any]], str] | None = None
 
 
 SENSORS: tuple[CarveraSensorDescription, ...] = (
     CarveraSensorDescription(
         key="state",
-        name="State",
+        translation_key="state",
         device_class=SensorDeviceClass.ENUM,
         options=MACHINE_STATES,
         value_fn=lambda d: d.get("state"),
@@ -70,7 +82,7 @@ SENSORS: tuple[CarveraSensorDescription, ...] = (
     ),
     CarveraSensorDescription(
         key="spindle_speed",
-        name="Spindle speed",
+        translation_key="spindle_speed",
         native_unit_of_measurement=REVOLUTIONS_PER_MINUTE,
         state_class=SensorStateClass.MEASUREMENT,
         icon="mdi:rotate-right",
@@ -78,7 +90,7 @@ SENSORS: tuple[CarveraSensorDescription, ...] = (
     ),
     CarveraSensorDescription(
         key="spindle_temperature",
-        name="Spindle temperature",
+        translation_key="spindle_temperature",
         device_class=SensorDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
@@ -87,7 +99,7 @@ SENSORS: tuple[CarveraSensorDescription, ...] = (
     ),
     CarveraSensorDescription(
         key="power_temperature",
-        name="Power supply temperature",
+        translation_key="power_temperature",
         device_class=SensorDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
@@ -96,15 +108,16 @@ SENSORS: tuple[CarveraSensorDescription, ...] = (
     ),
     CarveraSensorDescription(
         key="feed_rate",
-        name="Feed rate",
-        native_unit_of_measurement="mm/min",
-        state_class=SensorStateClass.MEASUREMENT,
+        translation_key="feed_rate",
+        # no state_class: the unit follows the machine's G20/G21 mode and
+        # long-term statistics cannot mix mm/min with in/min
         icon="mdi:speedometer",
         value_fn=lambda d: _g(d, "feed", "current"),
+        unit_fn=_feed_unit,
     ),
     CarveraSensorDescription(
         key="feed_override",
-        name="Feed override",
+        translation_key="feed_override",
         native_unit_of_measurement=PERCENTAGE,
         entity_category=EntityCategory.DIAGNOSTIC,
         icon="mdi:tune",
@@ -112,7 +125,7 @@ SENSORS: tuple[CarveraSensorDescription, ...] = (
     ),
     CarveraSensorDescription(
         key="spindle_override",
-        name="Spindle override",
+        translation_key="spindle_override",
         native_unit_of_measurement=PERCENTAGE,
         entity_category=EntityCategory.DIAGNOSTIC,
         icon="mdi:tune-variant",
@@ -120,28 +133,28 @@ SENSORS: tuple[CarveraSensorDescription, ...] = (
     ),
     CarveraSensorDescription(
         key="tool",
-        name="Tool",
+        translation_key="tool",
         icon="mdi:tools",
         value_fn=lambda d: _tool(_g(d, "tool", "number")),
     ),
     CarveraSensorDescription(
         key="target_tool",
-        name="Target tool",
+        translation_key="target_tool",
         icon="mdi:hammer-wrench",
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda d: _tool(_g(d, "tool", "target")),
     ),
     CarveraSensorDescription(
         key="tool_offset",
-        name="Tool offset",
-        native_unit_of_measurement="mm",
+        translation_key="tool_offset",
         entity_category=EntityCategory.DIAGNOSTIC,
         icon="mdi:arrow-expand-vertical",
         value_fn=lambda d: _g(d, "tool", "offset"),
+        unit_fn=_length_unit,
     ),
     CarveraSensorDescription(
         key="job_progress",
-        name="Job progress",
+        translation_key="job_progress",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         icon="mdi:progress-clock",
@@ -149,13 +162,13 @@ SENSORS: tuple[CarveraSensorDescription, ...] = (
     ),
     CarveraSensorDescription(
         key="job_file",
-        name="Job file",
+        translation_key="job_file",
         icon="mdi:file-cog",
         value_fn=lambda d: (_g(d, "job", "file") or "").split("/")[-1] or None,
     ),
     CarveraSensorDescription(
         key="job_elapsed",
-        name="Job elapsed",
+        translation_key="job_elapsed",
         device_class=SensorDeviceClass.DURATION,
         native_unit_of_measurement=UnitOfTime.SECONDS,
         icon="mdi:timer-outline",
@@ -163,7 +176,7 @@ SENSORS: tuple[CarveraSensorDescription, ...] = (
     ),
     CarveraSensorDescription(
         key="probe_voltage",
-        name="Wireless probe battery",
+        translation_key="probe_voltage",
         device_class=SensorDeviceClass.VOLTAGE,
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         state_class=SensorStateClass.MEASUREMENT,
@@ -173,7 +186,7 @@ SENSORS: tuple[CarveraSensorDescription, ...] = (
     ),
     CarveraSensorDescription(
         key="laser_power",
-        name="Laser power",
+        translation_key="laser_power",
         native_unit_of_measurement=PERCENTAGE,
         entity_category=EntityCategory.DIAGNOSTIC,
         icon="mdi:laser-pointer",
@@ -182,7 +195,7 @@ SENSORS: tuple[CarveraSensorDescription, ...] = (
     ),
     CarveraSensorDescription(
         key="halt_reason",
-        name="Halt reason",
+        translation_key="halt_reason",
         entity_category=EntityCategory.DIAGNOSTIC,
         icon="mdi:alert-circle-outline",
         value_fn=lambda d: d.get("halt_reason"),
@@ -219,6 +232,12 @@ class CarveraSensor(CarveraEntity, SensorEntity):
     @property
     def native_value(self) -> Any:
         return self.entity_description.value_fn(self.coordinator.data or {})
+
+    @property
+    def native_unit_of_measurement(self) -> str | None:
+        if self.entity_description.unit_fn is not None:
+            return self.entity_description.unit_fn(self.coordinator.data or {})
+        return self.entity_description.native_unit_of_measurement
 
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:

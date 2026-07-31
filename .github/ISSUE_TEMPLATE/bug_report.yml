@@ -1,0 +1,69 @@
+name: Bug report
+description: Something doesn't work as expected
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report! Two tools answer most questions up front:
+        - **Diagnostics**: Settings → Devices & Services → your Carvera device → ⋮ → *Download diagnostics* (IPs are redacted automatically).
+        - **`scripts/live_check.py`** from this repo, run on any computer on the same network: it tells apart "machine-side problem" from "Home Assistant-side problem".
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: ha-version
+    attributes:
+      label: Home Assistant version
+      placeholder: "2026.7.2"
+    validations:
+      required: true
+  - type: input
+    id: makerha-version
+    attributes:
+      label: MakerHA version
+      description: HACS → MakerHA, or the manifest version in the diagnostics file
+      placeholder: "0.2.0"
+    validations:
+      required: true
+  - type: input
+    id: firmware-version
+    attributes:
+      label: Machine firmware version
+      description: Shown as "Firmware" on the device page, or `version` on the machine console
+      placeholder: "http-status-api-75dd4b1 / community 2.x"
+    validations:
+      required: true
+  - type: dropdown
+    id: model
+    attributes:
+      label: Machine model
+      options:
+        - Carvera Air (CA1)
+        - Carvera (C1)
+        - Other / don't know
+    validations:
+      required: true
+  - type: dropdown
+    id: discovery
+    attributes:
+      label: How is the machine reached?
+      options:
+        - Discovered automatically (beacon)
+        - Manual IP entry
+        - Don't know
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics file
+      description: Drag & drop the diagnostics JSON here (or paste relevant parts)
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Settings → System → Logs, filtered on "carvera"
+      render: text

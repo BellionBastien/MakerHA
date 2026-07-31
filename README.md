@@ -122,6 +122,14 @@ automation:
 
 (Entity IDs contain your machine's name — pick them in the UI.)
 
+## Example dashboard
+
+A ready-to-paste dashboard (state, job progress gauge, temperature gauges, history graph, built-in cards only) lives
+in [`docs/dashboard.yaml`](docs/dashboard.yaml).
+
+Note: feed rate and tool offset follow the machine's unit mode — they report `in/min`/`in` while the machine runs in
+inch mode (G20). You can add the integration once per machine; several Carveras work side by side.
+
 ## How the "usually off" handling works
 
 The Carvera broadcasts a `NAME,IP,PORT,BUSY` announcement on UDP 3333 every second while powered on. The integration
@@ -131,6 +139,10 @@ current IP from it, and polling resumes. Everything except the **Online** sensor
 is off — that's the correct, expected representation.
 
 ## Troubleshooting
+
+First reflex for anything network-ish: run [`scripts/live_check.py`](scripts/live_check.py) from any computer on the
+same network (no Home Assistant needed) — it listens for the machine's announcement and calls the status API, which
+cleanly separates "machine-side problem" from "Home Assistant-side problem".
 
 **Nothing shows up in the discovery list.**
 The machine is probably powered off (turn it on and retry), or UDP broadcasts on port 3333 don't reach your Home

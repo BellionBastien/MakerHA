@@ -40,5 +40,80 @@
       "job_finished": "Usinage terminé",
       "alarm": "Alarme déclenchée"
     }
+  },
+  "entity": {
+    "sensor": {
+      "state": {
+        "name": "État"
+      },
+      "spindle_speed": {
+        "name": "Vitesse de broche"
+      },
+      "spindle_temperature": {
+        "name": "Température de broche"
+      },
+      "power_temperature": {
+        "name": "Température de l'alimentation"
+      },
+      "feed_rate": {
+        "name": "Vitesse d'avance"
+      },
+      "feed_override": {
+        "name": "Correction d'avance"
+      },
+      "spindle_override": {
+        "name": "Correction de broche"
+      },
+      "tool": {
+        "name": "Outil"
+      },
+      "target_tool": {
+        "name": "Outil cible"
+      },
+      "tool_offset": {
+        "name": "Décalage d'outil"
+      },
+      "job_progress": {
+        "name": "Progression de l'usinage"
+      },
+      "job_file": {
+        "name": "Fichier d'usinage"
+      },
+      "job_elapsed": {
+        "name": "Durée écoulée"
+      },
+      "probe_voltage": {
+        "name": "Batterie du palpeur sans fil"
+      },
+      "laser_power": {
+        "name": "Puissance laser"
+      },
+      "halt_reason": {
+        "name": "Raison de l'arrêt"
+      }
+    },
+    "binary_sensor": {
+      "running": {
+        "name": "En marche"
+      },
+      "alarm": {
+        "name": "Alarme"
+      },
+      "job_playing": {
+        "name": "Usinage en cours"
+      },
+      "controller_connected": {
+        "name": "Contrôleur connecté"
+      },
+      "laser_mode": {
+        "name": "Mode laser"
+      },
+      "vacuum_mode": {
+        "name": "Mode aspiration"
+      },
+      "online": {
+        "name": "En ligne"
+      }
+    }
   }
 }
