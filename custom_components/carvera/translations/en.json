@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Discovered machines",
+        "description": "Machines announcing themselves on your network. The status API must be enabled in the firmware (`config-set sd wifi.http_enable true`).",
+        "data": {
+          "machine": "Machine"
+        }
+      },
+      "manual": {
+        "title": "Machine address",
+        "description": "No machine was discovered (it may be powered off). Enter the address manually — the machine must be on to finish setup.",
+        "data": {
+          "host": "Host (IP address)",
+          "port": "Status API port"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not reach the status API. Check the machine is on and `wifi.http_enable` is set to true in the firmware."
+    },
+    "abort": {
+      "already_configured": "This machine is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "scan_interval": "Polling interval (seconds)"
+        }
+      }
+    }
+  },
+  "device_automation": {
+    "trigger_type": {
+      "tool_change_required": "Tool change required",
+      "job_started": "Job started",
+      "job_finished": "Job finished",
+      "alarm": "Alarm raised"
+    }
+  }
+}

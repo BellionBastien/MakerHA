@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Machines découvertes",
+        "description": "Machines qui s'annoncent sur votre réseau. L'API de statut doit être activée dans le firmware (`config-set sd wifi.http_enable true`).",
+        "data": {
+          "machine": "Machine"
+        }
+      },
+      "manual": {
+        "title": "Adresse de la machine",
+        "description": "Aucune machine découverte (elle est peut-être éteinte). Saisissez l'adresse manuellement — la machine doit être allumée pour terminer la configuration.",
+        "data": {
+          "host": "Hôte (adresse IP)",
+          "port": "Port de l'API de statut"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Impossible de joindre l'API de statut. Vérifiez que la machine est allumée et que `wifi.http_enable` est à true dans le firmware."
+    },
+    "abort": {
+      "already_configured": "Cette machine est déjà configurée."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "scan_interval": "Intervalle d'interrogation (secondes)"
+        }
+      }
+    }
+  },
+  "device_automation": {
+    "trigger_type": {
+      "tool_change_required": "Changement d'outil requis",
+      "job_started": "Usinage démarré",
+      "job_finished": "Usinage terminé",
+      "alarm": "Alarme déclenchée"
+    }
+  }
+}
