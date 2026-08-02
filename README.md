@@ -37,8 +37,10 @@ temperature, and switch the dust extraction with the machine — all local, noth
 
 ## Requirements
 
-- A Carvera or Carvera Air running the Community Firmware **with the HTTP status API** (feature branch
-  [`http-status-api`](https://github.com/Carvera-Community/Carvera_Community_Firmware), upstream PR pending), enabled once via the console:
+- A Carvera or Carvera Air running the Community Firmware **with the HTTP status API**. The feature is
+  [on its way upstream (PR #391)](https://github.com/Carvera-Community/Carvera_Community_Firmware/pull/391); until it
+  ships in official builds, **[flash the ready-made RC release](https://github.com/BellionBastien/Carvera_Community_Firmware/releases/tag/http-api-rc1)**
+  (pick the file matching your current firmware — stable 2.1.0c or dev). Enable once via the console:
 
   ```
   config-set sd wifi.http_enable true
