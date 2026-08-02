@@ -23,8 +23,8 @@ temperature, and switch the dust extraction with the machine — all local, noth
 
 <p align="center"><img src="docs/card.png" width="420" alt="The MakerHA card in a Home Assistant dashboard"></p>
 
-> **Status: early (v0.1.x).** Running against a Carvera Air on the `http-status-api` firmware branch. Feedback and
-> issue reports are very welcome — this is being shared to find out what other people need.
+> **Status: early (v0.3.x).** Running against a Carvera Air on the RC firmware. Feedback and issue reports are very
+> welcome — this is being shared to find out what other people need.
 
 - **Auto-discovery** — machines are found via the Carvera's own UDP announcement; no IP typing, and the integration
   follows the machine across DHCP lease changes automatically.
