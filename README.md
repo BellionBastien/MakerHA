@@ -124,10 +124,15 @@ automation:
 
 (Entity IDs contain your machine's name — pick them in the UI.)
 
-## Example dashboard
+## Default dashboard
 
-A ready-to-paste dashboard (state, job progress gauge, temperature gauges, history graph, built-in cards only) lives
-in [`docs/dashboard.yaml`](docs/dashboard.yaml).
+[`docs/dashboard.yaml`](docs/dashboard.yaml) is a complete, ready-to-paste dashboard — machine state, job progress,
+spindle speed with a trend sparkline, temperature gauges and history, plus a diagnostics row. Built-in cards only, no
+HACS dependencies.
+
+Settings → Dashboards → **+ Add dashboard** → *New dashboard from scratch* → open it → pencil → three-dot menu →
+**Raw configuration editor** → paste → Save. Then search & replace `carvera_air_05214` with your own machine's slug
+(check an entity id on the device page if unsure).
 
 Note: feed rate and tool offset follow the machine's unit mode — they report `in/min`/`in` while the machine runs in
 inch mode (G20). You can add the integration once per machine; several Carveras work side by side.

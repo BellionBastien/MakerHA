@@ -1,58 +1,162 @@
-# Copy-paste dashboard for a Carvera machine.
+# MakerHA default dashboard — paste-once setup:
 #
-# Uses only built-in cards. Replace the entity ids with yours: they are
-# derived from your machine name, e.g. CARVERA_AIR_05214 ->
-# sensor.carvera_air_05214_state. Add a new manual card, switch to the
-# YAML editor, and paste.
+#   Settings → Dashboards → + Add dashboard → "New dashboard from scratch"
+#   (name it e.g. "Carvera") → open it → pencil (edit) → three-dot menu →
+#   "Raw configuration editor" → replace everything with this file → Save.
+#
+# Entity ids below assume a machine named CARVERA_AIR_05214 — if yours
+# differs, search & replace `carvera_air_05214` with your machine's slug.
+# Built-in cards only, no HACS dependencies.
 
-type: vertical-stack
-cards:
-  - type: entities
-    title: Carvera
-    entities:
-      - entity: sensor.carvera_air_05214_state
-        name: State
-      - entity: binary_sensor.carvera_air_05214_online
-        name: Powered on
-      - entity: sensor.carvera_air_05214_tool
-        name: Tool
-      - entity: sensor.carvera_air_05214_job_file
-        name: Job file
-      - entity: sensor.carvera_air_05214_job_elapsed
-        name: Elapsed
+views:
+  - title: Carvera
+    path: carvera
+    icon: mdi:robot-industrial
+    type: sections
+    max_columns: 2
+    badges:
+      - type: entity
+        entity: binary_sensor.carvera_air_05214_online
+        show_name: true
+        show_state: true
+      - type: entity
+        entity: binary_sensor.carvera_air_05214_controller_connected
+        show_name: true
+        show_state: true
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Machine
+            icon: mdi:state-machine
+          - type: tile
+            entity: sensor.carvera_air_05214_state
+            name: State
+            icon: mdi:robot-industrial
+            color: primary
+            grid_options:
+              columns: 12
+          - type: tile
+            entity: binary_sensor.carvera_air_05214_alarm
+            name: Alarm
+            grid_options:
+              columns: 6
+          - type: tile
+            entity: sensor.carvera_air_05214_tool
+            name: Tool
+            icon: mdi:tools
+            grid_options:
+              columns: 6
+          - type: heading
+            heading: Job
+            icon: mdi:file-cog
+          - type: gauge
+            entity: sensor.carvera_air_05214_job_progress
+            name: Progress
+            min: 0
+            max: 100
+            needle: false
+            grid_options:
+              columns: 6
+              rows: 3
+          - type: tile
+            entity: sensor.carvera_air_05214_job_file
+            name: File
+            icon: mdi:file-document-outline
+            grid_options:
+              columns: 6
+          - type: tile
+            entity: sensor.carvera_air_05214_job_elapsed
+            name: Elapsed
+            icon: mdi:timer-outline
+            grid_options:
+              columns: 6
 
-  - type: gauge
-    entity: sensor.carvera_air_05214_job_progress
-    name: Job progress
-    min: 0
-    max: 100
-    unit: "%"
+      - type: grid
+        cards:
+          - type: heading
+            heading: Spindle
+            icon: mdi:rotate-right
+          - type: tile
+            entity: sensor.carvera_air_05214_spindle_speed
+            name: Spindle speed
+            icon: mdi:rotate-right
+            color: accent
+            features:
+              - type: trend-graph
+                hours_to_show: 2
+            grid_options:
+              columns: 12
+          - type: tile
+            entity: sensor.carvera_air_05214_feed_rate
+            name: Feed rate
+            icon: mdi:speedometer
+            grid_options:
+              columns: 12
+          - type: heading
+            heading: Temperatures
+            icon: mdi:thermometer
+          - type: gauge
+            entity: sensor.carvera_air_05214_spindle_temperature
+            name: Spindle
+            min: 10
+            max: 70
+            severity:
+              green: 10
+              yellow: 45
+              red: 60
+            grid_options:
+              columns: 6
+              rows: 3
+          - type: gauge
+            entity: sensor.carvera_air_05214_power_supply_temperature
+            name: Power supply
+            min: 10
+            max: 70
+            severity:
+              green: 10
+              yellow: 45
+              red: 60
+            grid_options:
+              columns: 6
+              rows: 3
+          - type: history-graph
+            hours_to_show: 2
+            entities:
+              - entity: sensor.carvera_air_05214_spindle_temperature
+                name: Spindle
+                color: '#eb6834'
+              - entity: sensor.carvera_air_05214_power_supply_temperature
+                name: Power supply
+                color: '#2a78d6'
+            grid_options:
+              columns: full
+              rows: 5
 
-  - type: horizontal-stack
-    cards:
-      - type: gauge
-        entity: sensor.carvera_air_05214_spindle_temperature
-        name: Spindle
-        min: 10
-        max: 70
-        severity:
-          green: 10
-          yellow: 45
-          red: 60
-      - type: gauge
-        entity: sensor.carvera_air_05214_power_temperature
-        name: Power supply
-        min: 10
-        max: 70
-        severity:
-          green: 10
-          yellow: 45
-          red: 60
-
-  - type: history-graph
-    title: Last hour
-    hours_to_show: 1
-    entities:
-      - entity: sensor.carvera_air_05214_spindle_speed
-      - entity: sensor.carvera_air_05214_spindle_temperature
-      - entity: sensor.carvera_air_05214_power_temperature
+      - type: grid
+        column_span: 2
+        cards:
+          - type: heading
+            heading: Diagnostics
+            heading_style: subtitle
+            icon: mdi:stethoscope
+          - type: tile
+            entity: sensor.carvera_air_05214_target_tool
+            name: Target tool
+            grid_options:
+              columns: 6
+          - type: tile
+            entity: sensor.carvera_air_05214_wireless_probe_battery
+            name: Probe battery
+            grid_options:
+              columns: 6
+          - type: tile
+            entity: binary_sensor.carvera_air_05214_laser_mode
+            name: Laser mode
+            grid_options:
+              columns: 6
+          - type: tile
+            entity: binary_sensor.carvera_air_05214_vacuum_mode
+            name: Vacuum mode
+            grid_options:
+              columns: 6
