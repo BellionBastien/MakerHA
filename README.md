@@ -33,6 +33,7 @@ temperature, and switch the dust extraction with the machine — all local, noth
   automate on power-on/power-off.
 - **Ready-made device triggers** — *Tool change required*, *Job started*, *Job finished*, *Alarm raised* — so the
   headline automation ("ping my phone when the machine waits for a tool") is a two-click affair.
+- **A dashboard card in the box** — installs and registers itself; add it from the card picker, no resource wrangling.
 - **Read-only by design** — the firmware API is GET-only; nothing on your network can control the machine through it.
 
 ## Requirements
@@ -124,15 +125,22 @@ automation:
 
 (Entity IDs contain your machine's name — pick them in the UI.)
 
-## Default dashboard
+## The card
 
-[`docs/dashboard.yaml`](docs/dashboard.yaml) is a complete, ready-to-paste dashboard — machine state, job progress,
-spindle speed with a trend sparkline, temperature gauges and history, plus a diagnostics row. Built-in cards only, no
-HACS dependencies.
+The integration ships its own dashboard card and registers it for you — no HACS frontend repo, no resource setup.
+Edit any dashboard → **+ Add card** → search **Carvera** → pick your machine. That's it.
 
-Settings → Dashboards → **+ Add dashboard** → *New dashboard from scratch* → open it → pencil → three-dot menu →
-**Raw configuration editor** → paste → Save. Then search & replace `carvera_air_05214` with your own machine's slug
-(check an entity id on the device page if unsure).
+It shows the machine at a glance: state (colour-coded), the current job with a progress bar, spindle speed, feed,
+tool, and both temperatures. When the machine is waiting on you it says so in plain words — *"Insert tool T7, then
+press the button"* — and when it's powered off it collapses to a quiet "Offline" row instead of a wall of
+`unavailable`. Every value is clickable for its full history.
+
+### Full dashboard (optional)
+
+[`docs/dashboard.yaml`](docs/dashboard.yaml) is a complete multi-card view — gauges, temperature history, diagnostics —
+if you want a dedicated Carvera dashboard. Settings → Dashboards → **+ Add dashboard** → *New dashboard from scratch* →
+open it → pencil → three-dot menu → **Raw configuration editor** → paste → Save, then search & replace
+`carvera_air_05214` with your machine's slug.
 
 Note: feed rate and tool offset follow the machine's unit mode — they report `in/min`/`in` while the machine runs in
 inch mode (G20). You can add the integration once per machine; several Carveras work side by side.

@@ -14,6 +14,7 @@ from .api import CarveraApiClient
 from .beacon import BeaconListener
 from .const import DEFAULT_SCAN_INTERVAL, DOMAIN
 from .coordinator import CarveraCoordinator
+from .frontend import async_register_card, async_unregister_card
 
 PLATFORMS: list[Platform] = [Platform.BINARY_SENSOR, Platform.SENSOR]
 
@@ -47,6 +48,7 @@ def _release_shared_beacon(hass: HomeAssistant) -> None:
 
 async def async_setup_entry(hass: HomeAssistant, entry: CarveraConfigEntry) -> bool:
     """Set up a Carvera from a config entry."""
+    await async_register_card(hass)
     beacon = await _async_get_shared_beacon(hass)
     client = CarveraApiClient(
         async_get_clientsession(hass), entry.data[CONF_HOST], entry.data[CONF_PORT]
@@ -81,4 +83,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: CarveraConfigEntry) -> 
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
         _release_shared_beacon(hass)
+        # last machine gone: take the card resource with it
+        if len(hass.config_entries.async_loaded_entries(DOMAIN)) <= 1:
+            await async_unregister_card(hass)
     return unload_ok

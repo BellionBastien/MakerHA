@@ -39,6 +39,23 @@ async def test_setup_creates_entities(hass: HomeAssistant, aioclient_mock) -> No
     assert entry.state is ConfigEntryState.NOT_LOADED
 
 
+async def test_setup_survives_without_frontend(hass: HomeAssistant, aioclient_mock) -> None:
+    """Registering the dashboard card must never be able to fail setup.
+
+    The test harness has no http component, which is exactly the shape of
+    "the frontend is not available" this guards against.
+    """
+    aioclient_mock.get("http://1.2.3.4:8080/status", json=SAMPLE_STATUS)
+    entry = MockConfigEntry(
+        domain=DOMAIN, unique_id="CARVERA_AIR_05214", data=ENTRY_DATA
+    )
+    entry.add_to_hass(hass)
+
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    assert entry.state is ConfigEntryState.LOADED
+
+
 async def test_setup_survives_machine_off(hass: HomeAssistant, aioclient_mock) -> None:
     """Setting up while the machine is off must not fail the entry."""
     aioclient_mock.get("http://1.2.3.4:8080/status", exc=TimeoutError())
