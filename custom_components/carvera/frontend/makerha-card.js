@@ -6,7 +6,7 @@
  * resource setup.
  */
 
-const CARD_VERSION = "0.3.0";
+const CARD_VERSION = "0.3.1";
 
 console.info(
   `%c MAKERHA-CARD %c ${CARD_VERSION} `,
@@ -114,12 +114,10 @@ class MakerHACard extends HTMLElement {
   }
 
   static getStubConfig(hass) {
-    const entities = hass?.entities ?? {};
-    for (const [entityId, entry] of Object.entries(entities)) {
+    for (const entry of Object.values(hass?.entities ?? {})) {
       if (entry.platform === "carvera" && entry.device_id) {
         return { type: "custom:makerha-card", device_id: entry.device_id };
       }
-      if (!entry.platform && entityId.endsWith("_state")) continue;
     }
     return { type: "custom:makerha-card" };
   }
@@ -146,12 +144,14 @@ class MakerHACard extends HTMLElement {
     const deviceId = this._config?.device_id;
     for (const [entityId, entry] of Object.entries(registry)) {
       if (deviceId ? entry.device_id !== deviceId : entry.platform !== "carvera") continue;
-      for (const [suffix, key] of Object.entries(SUFFIXES)) {
-        if (entityId.endsWith(suffix) && !found[key]) found[key] = entityId;
+      // longest match wins: "..._target_tool" also ends with "_tool", and which
+      // one would claim the key otherwise depends on registry iteration order
+      let best = null;
+      for (const suffix of Object.keys(SUFFIXES)) {
+        if (entityId.endsWith(suffix) && (best === null || suffix.length > best.length)) best = suffix;
       }
+      if (best !== null && !found[SUFFIXES[best]]) found[SUFFIXES[best]] = entityId;
     }
-    // longer suffixes win: "_target_tool" must not be claimed by "_tool"
-    if (found.tool && found.target_tool && found.tool === found.target_tool) delete found.tool;
     this._entities = found;
     return found;
   }
