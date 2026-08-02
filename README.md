@@ -21,7 +21,7 @@ Local, no-cloud Home Assistant integration for [Makera Carvera](https://www.make
 Know when your machine is waiting for a tool change, get pinged when the job finishes or alarms, chart your spindle
 temperature, and switch the dust extraction with the machine — all local, nothing leaves your network.
 
-<!-- TODO: add docs/device-page.png (screenshot of the HA device page) — a picture sells this better than any text -->
+<p align="center"><img src="docs/card.png" width="420" alt="The MakerHA card in a Home Assistant dashboard"></p>
 
 > **Status: early (v0.1.x).** Running against a Carvera Air on the `http-status-api` firmware branch. Feedback and
 > issue reports are very welcome — this is being shared to find out what other people need.
